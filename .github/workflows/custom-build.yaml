@@ -14,16 +14,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
-      - name: Set build label
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["build"]
-            })
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
         with:
@@ -83,17 +73,6 @@ jobs:
         with:
           path: coreboot/payloads/external/edk2/workspace
           key: coreboot-cache-build-v2
-      - name: Set build Full Rom label
-        if: ${{ steps.script.outputs.firmwareType == 'FULL_ROM' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["build-full-rom"]
-            })
       - name: Build Full ROM
         if: ${{ steps.script.outputs.firmwareType == 'FULL_ROM' }}
         id: build-full-rom
@@ -101,17 +80,6 @@ jobs:
         env:
           BOARD_NAME: ${{ steps.script.outputs.boardName }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-      - name: Set build Alt FW label
-        if: ${{ steps.script.outputs.firmwareType == 'ALT_FW' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["build-alt-fw"]
-            })
       - name: Customize Alt FW
         if: ${{ steps.script.outputs.firmwareType == 'ALT_FW' }}
         id: build-alt-fw
@@ -129,20 +97,6 @@ jobs:
         with:
           name: ${{ steps.build-full-rom.outputs.artifactName }}${{ steps.build-alt-fw.outputs.artifactName }}
           path: ${{ steps.build-full-rom.outputs.artifactPath }}${{ steps.build-alt-fw.outputs.artifactPath }}
-      - name: Set success label
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["success"]
-            })
-      - name: Remove failure label
-        uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          labels: failure
       - name: Close Issue
         run: gh issue close --comment "The GitHub Action is complete! Download the artifact of the run to flash the firmware" ${{ github.event.issue.number }}
         env:
@@ -155,20 +109,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Set failure label
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["failure"]
-            })
-      - name: Remove success label
-        uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          labels: success
+
       - name: Close Issue
         run: gh issue close --comment "The GitHub Action has failed! See the logs for details" ${{ github.event.issue.number }}
         env:
