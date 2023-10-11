@@ -1,7 +1,6 @@
 name: Custom ROM Builder
 description: Change logo and other options
-title: "[Custom Logo Build]: "
-labels: ["build-request"]
+title: "[Custom coreboot Build]: "
 body:
   - type: dropdown
     attributes:
