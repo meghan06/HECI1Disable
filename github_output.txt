@@ -1,0 +1,2 @@
+boardName=redrix
+firmwareType=ALT_FW

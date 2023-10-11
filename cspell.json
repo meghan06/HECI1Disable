@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "version": "0.2",
+    "words": [
+        "Coreboot",
+        "DISABLE_HECI1_AT_PRE_BOOT",
+        "flashrom",
+        "frontpage",
+        "jinlon",
+        "redrix",
+        "robo360",
+        "UEFI"
+    ]
+}
